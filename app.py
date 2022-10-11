@@ -2,12 +2,23 @@ from datetime import datetime, timedelta
 from typing import List, Union
 
 from fastapi import FastAPI
+from humps import camelize
 from pydantic import BaseModel
 
 app = FastAPI()
 
 
-class TravelInfo(BaseModel):
+def to_camel(str) -> str:
+    return camelize(str)
+
+
+class CamelCasedBaseModel(BaseModel):
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
+
+
+class TravelInfo(CamelCasedBaseModel):
     id: int
     departure_station: str
     departure_time: datetime
